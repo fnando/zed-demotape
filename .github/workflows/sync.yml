@@ -1,0 +1,44 @@
+---
+name: Sync Zed Extension Code
+
+on:
+  workflow_dispatch:
+    inputs: {}
+  schedule:
+    - cron: "0 * * * *"  # Runs every hour
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Checkout demotape
+        uses: actions/checkout@v6
+        with:
+          repository: fnando/demotape
+          path: demotape
+
+      - name: Copy files
+        run: cp -r demotape/editors/zed/* .
+
+      - name: Remove demotape directory
+        run: rm -rf demotape
+
+      - name: Commit and push changes
+        run: |
+          git config user.email "me@fnando.com"
+          git config user.name "Nando Vieira via Github Actions"
+          git add .
+          git commit --message "Sync files."
+          git reset --hard
+          git pull origin --rebase
+          git push origin --set-upstream
+          git diff
+          git diff-index --cached HEAD
+          git status
