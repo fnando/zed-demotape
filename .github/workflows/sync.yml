@@ -35,10 +35,10 @@ jobs:
           git config user.email "me@fnando.com"
           git config user.name "Nando Vieira via Github Actions"
           git add .
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
           git commit --message "Sync files."
-          git reset --hard
           git pull origin --rebase
-          git push origin --set-upstream
-          git diff
-          git diff-index --cached HEAD
-          git status
+          git push origin
