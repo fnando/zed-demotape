@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs: {}
   schedule:
-    - cron: "0 * * * *"  # Runs every hour
+    - cron: "0 * * * *" # Runs every hour
 
 jobs:
   sync:
@@ -25,7 +25,10 @@ jobs:
           path: demotape
 
       - name: Copy files
-        run: cp -r demotape/editors/zed/* .
+        run: |
+          mkdir -p snippets
+          cp -r demotape/editors/zed/* .
+          cp demotape/editors/vscode/snippets/demotape.json snippets/demotape.json
 
       - name: Remove demotape directory
         run: rm -rf demotape
